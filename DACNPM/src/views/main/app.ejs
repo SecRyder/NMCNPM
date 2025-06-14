@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <title>Doctors Care</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- Bootstrap 4.3, jQuery 3.3, Font Awesome 4.7, Slick Slider -->
+  <script src="/components/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" href="/components/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
+  <script src="/components/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/components/slick-slider/slick/slick.css">
+  <link rel="stylesheet" href="/components/slick-slider/slick/slick-theme.css">
+  <script src="/components/slick-slider/slick/slick.js"></script>
+  <link rel="stylesheet" href="/components/AlertifyJS/css/alertify.min.css" />
+  <link rel="stylesheet" href="/components/AlertifyJS/css/themes/default.min.css" />
+  <!-- Thêm Font Awesome từ CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+  <!-- jQuery UI -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <!-- Table of Contents plugin -->
+  <link type="text/css" rel="stylesheet" href="/components/tableOfContent/jquery.tocify.css" />
+  <script src="/components/tableOfContent/jquery.tocify.min.js"></script>
+
+  <!-- Optional external script from environment -->
+  <% if (process.env.URL_BING_HTTPS) { %>
+    <script type="text/javascript" src="<%= process.env.URL_BING_HTTPS %>" async defer></script>
+    <% } %>
+      <style>
+        .contact-icons {
+          position: fixed;
+          bottom: 150px;
+          right: 25px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          z-index: 999;
+        }
+
+        .contact-icons a img {
+          width: 50px;
+          height: 50px;
+          transition: transform 0.5s ease;
+          animation: pulse 0.4s infinite;
+        }
+
+        .contact-icons a img:hover {
+          transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+          }
+
+          50% {
+            transform: scale(1.05);
+          }
+
+          100% {
+            transform: scale(1);
+          }
+        }
+      </style>
+</head>
+
+<body>
+
+  <%- content %>
+    <div class="spacer"></div>
+
+    <!-- App Scripts -->
+    <script src="/js/homepage.js"></script>
+    <script src="/js/client.js"></script>
+    <script src="/components/AlertifyJS/alertify.min.js"></script>
+
+    <div class="contact-icons">
+      <!-- Zalo -->
+      <a href="https://zalo.me/0854008327" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" />
+      </a>
+
+      <!-- Messenger -->
+      <a href="https://m.me/660432980477560" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Facebook_Messenger_logo_2013.svg"
+          alt="Messenger" />
+      </a>
+
+      <a href="javascript:void(0);" onclick="showPhoneNumber()">
+        <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone" />
+      </a>
+
+      <!-- Đặt lịch ngay -->
+      <a href="/for-patients" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Đặt lịch ngay" />
+      </a>
+      <script>
+        function showPhoneNumber() {
+          alert("Số điện thoại: 0854008327\nHãy liên hệ với chúng tôi!");
+          window.location.href = "tel:0854008327";
+        }
+      </script>
+    </div>
+
+</body>
+
+</html>

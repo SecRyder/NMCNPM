@@ -1,0 +1,89 @@
+<% extend("master.ejs") %>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Thêm mới chuyên khoa</h1>
+    <a href="/users/manage/specialization" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Quay lại
+    </a>
+</div>
+
+<% if(success != "") { %>
+    <div class="alert alert-success" role="alert">
+        <%= success %>
+    </div>
+<% } %>
+
+<% if(errors != "") { %>
+    <div class="alert alert-danger" role="alert">
+        <%= errors %>
+    </div>
+<% } %>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thông tin chuyên khoa</h6>
+    </div>
+    <div class="card-body">
+        <form action="/admin/create-specialization" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Tên chuyên khoa <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Hình ảnh</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
+                    <label class="custom-file-label" for="image">Chọn file ảnh</label>
+                </div>
+                <small class="form-text text-muted">Kích thước tối đa: 2MB. Định dạng: JPG, PNG, GIF</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                <input type="hidden" id="descriptionHTML" name="descriptionHTML">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="reset" class="btn btn-secondary">Làm lại</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Kích hoạt WYSIWYG editor cho phần mô tả
+        $('#description').summernote({
+            height: 300,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            callbacks: {
+                onChange: function(contents) {
+                    $('#descriptionHTML').val(contents);
+                }
+            }
+        });
+        
+        // Hiển thị tên file khi chọn file
+        $('.custom-file-input').on('change', function() {
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+        
+        // Kích hoạt menu active
+        $("div #featureManage").addClass('show');
+        $("div #featureManage").find($("#aManageSpecialization")).addClass("active");
+    });
+    
+    // Trước khi submit form, cập nhật giá trị HTML
+    $('form').on('submit', function() {
+        $('#descriptionHTML').val($('#description').summernote('code'));
+    });
+</script>

@@ -1,0 +1,266 @@
+<% extend("master.ejs") %>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Thêm lịch khám phòng khám</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-10 mx-auto">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="datepicker">Chọn ngày:</label>
+                    <input class="form-control" data-date-format="dd/mm/yyyy" id="datepicker">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="doctor">Chọn Bác sĩ</label>
+                    <% if (user.roleId==2) { %>
+                        <input type="text" class="form-control" value="<%= user.name %> - <%= user.email %>" readonly>
+                        <input type="hidden" id="doctor" value="<%= user.id %>">
+                        <% } else { %>
+                            <select id="doctor" class="form-control">
+                                <option value="" selected disabled>-- Chọn bác sĩ --</option>
+                                <!-- Options sẽ được load bằng AJAX -->
+                            </select>
+                            <% } %>
+                </div>
+            </div>
+            <div class="mb-4">
+                <span>Chọn khung giờ:</span>
+                <div id="lsBtnSchedule">
+                    <button id="time-08-09" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="08:00 - 09:00">
+                        08:00 - 09:00
+                    </button>
+                    <button id="time-09-10" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="09:00 - 10:00">
+                        09:00 - 10:00
+                    </button>
+                    <button id="time-10-11" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="10:00 - 11:00">
+                        10:00 - 11:00
+                    </button>
+                    <button id="time-11-12" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="11:00 - 12:00">
+                        11:00 - 12:00
+                    </button>
+                    <button id="time-13-14" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="13:00 - 14:00">
+                        13:00 - 14:00
+                    </button>
+                    <button id="time-14-15" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="14:00 - 15:00">
+                        14:00 - 15:00
+                    </button>
+                    <button id="time-15-16" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="15:00 - 16:00">
+                        15:00 - 16:00
+                    </button>
+                    <button id="time-16-17" type="button" class="btn btn-light mr-3 my-3 btn-schedule"
+                        value="16:00 - 17:00">
+                        16:00 - 17:00
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary mb-3" id="createNewScheduleDoctor">Lưu</button>
+
+            <div>
+                <span>Khung giờ đã chọn: (chưa lưu)</span>
+                <div>
+                    <table class="table table-bordered" id="tableCreateSchedule" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Khung giờ</th>
+                                <th>Ngày</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#liSchedule").addClass('active');
+
+            // Khởi tạo datepicker
+            $('#datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                todayHighlight: true,
+                autoclose: true,
+                startDate: new Date()
+            });
+
+            // Load danh sách bác sĩ
+            loadDoctors();
+
+            // Xử lý chọn khung giờ
+            $('.btn-schedule').on('click', function () {
+                $(this).toggleClass('btn-light btn-info');
+            });
+
+            // Xử lý lưu lịch khám
+            $('#createNewScheduleDoctor').off('click').on('click', function () {
+                let selectedDate = $('#datepicker').val();
+                let doctorId = $('#doctor').val();
+
+                if (!selectedDate) {
+                    alert('Vui lòng chọn ngày khám');
+                    return;
+                }
+
+                if (!doctorId) {
+                    alert('Vui lòng chọn bác sĩ');
+                    return;
+                }
+
+                let selectedTimes = [];
+                $('.btn-schedule.btn-info').each(function () {
+                    selectedTimes.push($(this).val());
+                });
+
+                if (selectedTimes.length === 0) {
+                    alert('Vui lòng chọn ít nhất một khung giờ');
+                    return;
+                }
+
+                // Format lại ngày từ dd/mm/yyyy sang yyyy-mm-dd
+                let dateParts = selectedDate.split('/');
+                let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+                // Gửi dữ liệu lên server
+                $.ajax({
+                    url: '/doctor/create-schedule',
+                    method: 'POST',
+                    data: {
+                        doctorId: doctorId,
+                        date: selectedDate,
+                        schedules: selectedTimes
+                    },
+                    success: function (response) {
+                        if (response.errCode === 0) {
+                            alert('Tạo lịch khám thành công');
+                            // Reset form
+                            $('#datepicker').val('');
+                            $('#doctor').val('');
+                            $('.btn-schedule.btn-info').removeClass('btn-info').addClass('btn-light');
+                            $('#tableCreateSchedule tbody').empty();
+                        } else {
+                            alert(response.errMessage);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert('Đã xảy ra lỗi');
+                    }
+                });
+            });
+
+            // Hiển thị lịch đã chọn vào bảng
+            $('.btn-schedule').on('click', function () {
+                updateScheduleTable();
+            });
+        });
+
+        // Hàm load danh sách bác sĩ từ server
+        function loadDoctors() {
+            $.ajax({
+                url: '/api/get-doctors',
+                method: 'GET',
+                success: function (response) {
+                    if (response.errCode === 0 && response.data) {
+                        let doctors = response.data;
+                        let doctorSelect = $('#doctor');
+                        doctorSelect.empty();
+                        doctorSelect.append('<option value="" selected disabled>-- Chọn bác sĩ --</option>');
+
+                        doctors.forEach(function (doctor) {
+                            doctorSelect.append(`<option value="${doctor.id}">${doctor.name} - ${doctor.email}</option>`);
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('Không thể tải danh sách bác sĩ');
+                }
+            });
+        }
+
+        // Hàm cập nhật bảng lịch đã chọn
+        function updateScheduleTable() {
+            let selectedDate = $('#datepicker').val();
+            let doctorName = $('#doctor').find('option:selected').text();
+            let tbody = $('#tableCreateSchedule tbody');
+
+            tbody.empty();
+
+            if (!selectedDate || !$('#doctor').val()) {
+                return;
+            }
+
+            $('.btn-schedule.btn-info').each(function () {
+                let time = $(this).val();
+                tbody.append(`<tr>
+                <td>${time}</td>
+                <td>${selectedDate} - ${doctorName}</td>
+            </tr>`);
+            });
+        }
+
+        // Xử lý nút lưu
+        $('#btn-save-schedule').on('click', function () {
+            let selectedDate = $('#datepicker').val();
+            let doctorId = $('#doctor').val();
+            let timeSlots = [];
+
+            // Thu thập các khung giờ đã chọn
+            $('.btn-schedule.btn-info').each(function () {
+                timeSlots.push($(this).val() || $(this).text());
+            });
+
+            // Validate dữ liệu
+            if (!selectedDate) {
+                alert('Vui lòng chọn ngày');
+                return;
+            }
+
+            if (!doctorId) {
+                alert('Vui lòng chọn bác sĩ');
+                return;
+            }
+
+            if (timeSlots.length === 0) {
+                alert('Vui lòng chọn ít nhất một khung giờ');
+                return;
+            }
+
+            // Gửi request đến server
+            $.ajax({
+                url: '/doctor/create-schedule',
+                method: 'POST',
+                data: {
+                    doctorId: doctorId,
+                    date: selectedDate,
+                    schedules: timeSlots
+                },
+                success: function (response) {
+                    if (response.errCode === 0) {
+                        alert('Lưu lịch khám thành công!');
+                        // Reset form hoặc làm mới trang
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + response.errMessage);
+                        console.error('Server response:', response);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi khi lưu lịch khám');
+                    console.error('AJAX error:', status, error);
+                    console.error('Response:', xhr.responseText);
+                }
+            });
+        });
+    </script>

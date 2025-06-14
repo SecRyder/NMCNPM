@@ -1,0 +1,345 @@
+<% extend("../app.ejs") %>
+    <section class="mt-3 fixed-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2">
+                    <div class="homepage-logo mt-2">
+                        <img class="menu-nav" src="../images/background/menu-nav.png" alt="img logo">
+                        <span><i class="fa-solid fa-suitcase-medical" style="color: #2a96a5;"></i>
+                            <b style="color: #2a96a5; font-size: 23px;"> DoctorsCare</b>
+                        </span>
+                    </div>
+                    <div class="home-nav">
+                        <div class="nav-item">
+                            <% if(user){%>
+                                <a href="/users" target="_blank" style="color:#2a96a5"><b>Dashboard</b></a>
+                                <%} else {%>
+                                    <a href="/login" style="color:#2a96a5"><b>Đăng nhập</b></a>
+                                    <% }%>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 d-none d-md-block d-md-flex justify-content-between ">
+                    <div class="d-flex flex-column">
+                        <span><b>Chuyên khoa</b></span>
+                        <a href="/all-specializations" class="text-decoration-none">
+                            <span style="color:#2a96a5 "><b>Tìm bác sĩ theo chuyên khoa</b></span>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span><b>Cơ sở y tế</b></span>
+                        <a href="/all-clinics" class="text-decoration-none">
+                            <span style="color:#2a96a5 "><b>Chọn bệnh viện, phòng khám</b></span>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span><b>Bác sĩ</b></span>
+                        <a href="/all-doctors" class="text-decoration-none">
+                            <span style="color:#2a96a5 "><b>Chọn bác sĩ giỏi</b></span>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span><b>Gói khám</b></span>
+                        <a href="/all-packages" class="text-decoration-none">
+                            <span style="color:#2a96a5 "><b>Khám sức khỏe tổng quát</b></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                    <span title="Có câu hỏi?"><a href="https://www.facebook.com/profile.php?id=61575172705823"
+                            target="_blank" class="text-decoration-none" style="color:#2a96a5 "><b>Cần hỗ
+                                trợ?</b></a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="sec-header d-flex flex-column">
+        <div class="img-header d-flex flex-column mt-3 ">
+            <div class="text-center mt-5"><span style="font-size: 30px; color: #2a96a5"><b>NỀN TẢNG Y TẾ <br> CHĂM SÓC
+                        SỨC KHỎE TOÀN
+                        DIỆN</b></span>
+            </div>
+            <div class="header-search align-self-center justify-content-center mt-5">
+                <i class="fa fa-search"></i>
+                <label for="input-search"></label>
+                <input id="input-search" placeholder="Tìm kiếm thông tin...">
+                <div id="show-info-search" class="show-info-search">
+                </div>
+            </div>
+        </div>
+        <div class="content-header d-flex justify-content-between title-and-icon align-items-center">
+            <a href="/all-specializations" class="text-decoration-none">
+                <div class="d-flex flex-column ml-5 pl-5 align-items-center" style="color: black ">
+                    <i class="fa fa-check"></i>
+                    <span>Chuyên khoa phổ biến</span>
+                </div>
+            </a>
+            <a href="/all-clinics" class="text-decoration-none">
+                <div class="d-flex flex-column align-items-center" style="color: black ">
+                    <i class="fa fa-thumbs-up"></i>
+                    <span>Phòng khám hàng đầu</span>
+                </div>
+            </a>
+            <a href="/all-doctors" class="text-decoration-none">
+                <div class="d-flex flex-column align-items-center" style="color: black ">
+                    <i class="fa fa-user-md"></i>
+                    <span>Bác sĩ nổi bật</span>
+                </div>
+            </a>
+            <a href="/all-handbook" class="text-decoration-none">
+                <div class="d-flex flex-column mr-5 pr-5 align-items-center" style="color: black">
+                    <i class=" fa fa-clock-o"></i>
+                    <span>Cẩm nang</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!--CHUYEN KHOA PHO BIEN-->
+    <section class="sec-fields-hospital d-flex flex-column">
+        <div class="sec-fields-title mx-auto d-flex my-3">
+            <h2 class="">Chuyên khoa phổ biến</h2>
+            <a class="flex-grow-1 my-auto"><span class="d-block show-all-specializations">Xem tất cả</span></a>
+        </div>
+        <div class="section-slide">
+            <div class="slider slider-nav text-decoration-none">
+                <% specializations.forEach(function(x) { %>
+                    <a href="/detail/specialization/<%= x.id %>" class="a-specialization text-decoration-none"
+                        style="outline: none">
+                        <div class="d-flex flex-column slide-fields specialization" data-specialization="<%= x.id %>">
+                            <img src="/images/specializations/<%= x.image %>" alt="image bla bla">
+                            <h3 class="text-decoration-none">
+                                <%= x.name %>
+                            </h3>
+                        </div>
+                    </a>
+                    <% }) %>
+            </div>
+        </div>
+    </section>
+    <section class="sec-hospitals">
+        <div class="sec-fields-title mx-auto d-flex my-3">
+            <h2 class="">Phòng khám hàng đầu</h2>
+            <a class="flex-grow-1 my-auto"><span class="d-block show-all-clinics">Xem tất cả</span></a>
+        </div>
+        <div class="section-slide">
+            <div class="slider slider-nav text-decoration-none">
+                <% clinics.forEach(function(clinic) { %>
+                    <a href="/detail/clinic/<%= clinic.id %>" class="text-decoration-none" style="outline: none">
+                        <div class="d-flex flex-column slide-fields clinics" data-clinic="<%= clinic.id %>">
+                            <img src="/images/clinics/<%= clinic.image %>" alt="image bla bla">
+                            <h3>
+                                <%= clinic.name %>
+                            </h3>
+                        </div>
+                    </a>
+                    <% }) %>
+            </div>
+        </div>
+    </section>
+    <section class="sec-doctors">
+        <div class="sec-fields-title mx-auto d-flex my-3">
+            <h2 class="">Bác sĩ nổi bật</h2>
+            <a class="flex-grow-1 my-auto"><span class="d-block show-all-doctors">Xem tất cả</span></a>
+        </div>
+        <div class="section-slide">
+            <div class="slider slider-nav text-decoration-none">
+                <% doctors.forEach(function(doctor) { %>
+                    <a href="/detail/doctor/<%= doctor.id %>" class="text-decoration-none" style="outline: none">
+                        <div class="slide-doctors text-decoration-none">
+                            <div class="doctor-avatar">
+                                <img src="/images/users/<%= doctor.avatar %>" alt="image bla bla">
+                                <h3 style="color: black">
+                                    <%= doctor.name %>
+                                </h3>
+                                <h4 style="color: black">
+                                    <%= doctor.getDataValue('specializationName') %>
+                                </h4>
+                                <span title="Số lượng bệnh nhân đã đặt lịch" style="color: #2a96a5">
+                                    <%= doctor.getDataValue('countBooking') %> bệnh nhân (đã đặt)
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    <% }) %>
+            </div>
+        </div>
+    </section>
+    <section class="sec-posts">
+        <div class="sec-fields-title mx-auto d-flex my-3">
+            <h2 class="">Cẩm nang</h2>
+            <a class="flex-grow-1 my-auto text-decoration-none" href="/all-handbook"><span
+                    class="d-block text-decoration-none">Xem tất cả</span></a>
+        </div>
+        <div class="section-slide">
+            <div class="slider slider-nav-posts">
+                <% posts.forEach(function(post) { %>
+                    <a href="/handbook/<%= post.id %>" class="text-decoration-none" style="outline: none">
+                        <div class="d-flex flex-row slide-post">
+                            <div class="img-post">
+                                <img src="https://thietbikythuat.com.vn/wp-content/uploads/2021/01/linh-vuc-y-te-768x534.jpg"
+                                    alt="image bla bla">
+                            </div>
+                            <div class="content-post">
+                                <h3 style="color: #2a96a5">
+                                    <%= post.title %>
+                                </h3>
+                                <p>
+                                    <%= post.getDataValue('content') %>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                    <% }) %>
+            </div>
+        </div>
+    </section>
+    <!---
+    <section class="sec-for-doctors">
+        <div class="d-flex flex-row mx-auto main-for-doctors">
+            <div class="d-flex flex-column col-5" style="text-align: center;">
+                <h1 class="mt-4">Dành cho bác sĩ</h1>
+                <span class="mt-3 mb-1">Xây dựng uy tín và thương hiệu trực tuyến</span>
+                <span>Tăng số lượng bệnh nhân và quản lý hiệu quả</span>
+                <a href="/contact" class="mt-5 pd-3 contact-admin text-decoration-none" style="margin-left: 170px;">LIÊN
+                    HỆ HỢP TÁC</a>
+            </div>
+            <div class="col-8 d-flex flex-column align-items-center" style="padding-top: 5px">
+                <h1 class="mt-4">Dành cho khách hàng</h1>
+                <span class="mt-3 mb-1">Hỗ trợ nếu bạn gặp bất kỳ vấn đề gì (trong trường hợp khẩn cấp)</span>
+                <span>Learn how to use easily and quickly</span>
+                <a href="https://www.facebook.com/tran.thi.anh.nguyet.226577" target="_blank"
+                    class="mt-5 pd-3 contact-facebook text-decoration-none">
+                    <i class="fab fa-facebook-square"></i> Contact via Facebook
+                </a>
+            </div>
+    </section>
+-->
+    <section class="sec-for-doctors">
+        <div class="d-flex flex-row mx-auto main-for-doctors">
+            <!-- Bên trái: Phần dành cho bác sĩ -->
+            <div class="d-flex flex-column col-4 text-center align-items-center">
+                <h1 class="mt-4">Dành cho bác sĩ</h1>
+                <span class="mt-3 mb-1">Xây dựng uy tín và thương hiệu trực tuyến</span>
+                <span>Tăng số lượng bệnh nhân và quản lý hiệu quả</span>
+                <a href="/contact" class="btn btn-primary mt-auto contact-admin text-decoration-none">
+                    LIÊN HỆ HỢP TÁC
+                </a>
+            </div>
+
+            <!-- Ở giữa: Phần dành cho khách hàng -->
+            <div class="d-flex flex-column col-4 text-center align-items-center">
+                <h1 class="mt-4">Dành cho khách hàng</h1>
+                <span class="mt-3 mb-1">Hỗ trợ nếu bạn gặp bất kỳ vấn đề gì (trong trường hợp khẩn cấp)</span>
+                <span>Learn how to use easily and quickly</span>
+                <a href="https://www.facebook.com/tran.thi.anh.nguyet.226577" target="_blank"
+                    class="btn btn-primary mt-auto contact-facebook text-decoration-none">
+                    <i class="fab fa-facebook-square"></i> Contact via Facebook
+                </a>
+            </div>
+
+            <!-- Bên phải: Video giới thiệu -->
+            <div class="d-flex flex-column col-4 align-items-center">
+                <div class="video-wrapper mt-auto">
+                    <iframe src="https://www.youtube.com/embed/yxYs9H3FXVw" title="Giới thiệu video" frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="modalAllSpecializations">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tất cả chuyên khoa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row all-specializations-body px-2">
+                        <% specializations.forEach(function(x) { %>
+                            <div class="col-12 col-spe pl-3"><a href="/detail/specialization/<%= x.id %>"
+                                    class="text-decoration-none">
+                                    <%= x.name %>
+                                </a></div>
+                            <% }) %>
+                                <div class="col-12 col-spe pl-3"><a href="/all-specializations"
+                                        class="text-decoration-none">Xem tất cả</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-confirm-booking-spe"
+                        data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="modalAllClinics">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tất cả phòng khám</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row all-specializations-body px-2">
+                        <% clinics.forEach(function(x) { %>
+                            <div class="col-12 col-spe pl-3"><a href="/detail/clinic/<%= x.id %>"
+                                    class="text-decoration-none">
+                                    <%= x.name %>
+                                </a></div>
+                            <% }) %>
+                                <div class="col-12 col-spe pl-3"><a href="/all-clinics" class="text-decoration-none">Xem
+                                        tất cả</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-confirm-booking-spe"
+                        data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="modalAllDoctors">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tất cả bác sĩ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row all-doctors-body px-2">
+                        <% doctors.forEach(function(x) { %>
+                            <div class="col-12 col-spe pl-3"><a href="/detail/doctor/<%= x.id %>"
+                                    class="text-decoration-none">
+                                    <%= x.name %>
+                                </a></div>
+                            <% }) %>
+                    </div>
+                    <div class="row all-doctors-body px-2">
+                        <div class="col-12 col-spe pl-3"><a href="/all-doctors" class="text-decoration-none">Xem tất
+                                cả</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-confirm-booking-spe"
+                        data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,17 @@
+<% extend("master.ejs") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 text-danger">500</h1>
+            <h2 class="mb-4">Lỗi máy chủ</h2>
+            <p class="lead">Đã xảy ra lỗi khi xử lý yêu cầu của bạn.</p>
+            <% if(typeof error !== 'undefined') { %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+            <% } %>
+            <a href="/" class="btn btn-primary mt-3">Trở về trang chủ</a>
+        </div>
+    </div>
+</div>

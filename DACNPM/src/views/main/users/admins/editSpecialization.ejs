@@ -1,0 +1,90 @@
+<% extend("master.ejs") %>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Chỉnh sửa chuyên khoa</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thông tin chuyên khoa</h6>
+        </div>
+        <div class="card-body">
+            <form id="editSpecializationForm" enctype="multipart/form-data">
+                <!-- Đảm bảo ID được truyền đúng cách -->
+                <input type="hidden" id="specializationId" name="id" value="<%= specialization.id %>">
+
+                <div class="form-group">
+                    <label for="specializationName">Tên chuyên khoa</label>
+                    <input type="text" class="form-control" id="specializationName" name="name"
+                        value="<%= specialization.name %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="specializationDescription">Mô tả</label>
+                    <textarea class="form-control" id="specializationDescription" name="description"
+                        rows="5"><%= specialization.description %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="specializationImage">Hình ảnh</label>
+                    <div class="mb-2">
+                        <% if(specialization.image) { %>
+                            <img src="/images/specializations/<%= specialization.image %>"
+                                alt="<%= specialization.name %>" style="max-width: 200px;">
+                            <% } %>
+                    </div>
+                    <input type="file" class="form-control-file" id="specializationImage" name="image">
+                    <small class="form-text text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a href="/admin/manage-specialization" class="btn btn-secondary">Hủy</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Debug để xem ID đã được lấy đúng chưa
+            console.log("Form loaded, specialization ID:", "<%= specialization.id %>");
+
+            $('#editSpecializationForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // Log giá trị ID trước khi gửi form
+                console.log("Submitting form with ID:", $('#specializationId').val());
+
+                let formData = new FormData(this);
+
+                // Thêm ID vào FormData một lần nữa để đảm bảo
+                formData.append('id', "<%= specialization.id %>");
+
+                $.ajax({
+                    url: '/admin/update-specialization',
+                    method: 'PUT',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.errCode === 0) {
+                            alertify.success('Cập nhật chuyên khoa thành công');
+                            setTimeout(() => {
+                                window.location.href = '/admin/manage-specialization';
+                            }, 1500);
+                        } else {
+                            alertify.error(response.errMessage || 'Cập nhật thất bại');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error updating:", xhr.responseText);
+                        // Hiển thị thông báo lỗi chi tiết hơn
+                        alertify.error('Lỗi: ' + (xhr.responseJSON?.error || error || 'Đã xảy ra lỗi khi cập nhật'));
+                    }
+                });
+            });
+        });
+    </script>
+
+    <a href="/users/manage/specialization" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Quay lại
+    </a>
